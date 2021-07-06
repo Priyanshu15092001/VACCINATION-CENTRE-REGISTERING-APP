@@ -2,6 +2,7 @@ package com.example.demolist;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class CustomListViewActivity extends AppCompatActivity {
         centerList = new ArrayList<String>();
         districtList = new ArrayList<String>();
         availableList=new ArrayList<Boolean>();
-        String urlString = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=824231&date=14-06-2021";
+        String urlString = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode="+"824231"+"&date="+"06-07-2021";
         StringRequest request = new StringRequest(Request.Method.GET, urlString, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -108,6 +109,7 @@ public class CustomListViewActivity extends AppCompatActivity {
             return 0;
         }
 
+        @SuppressLint("ViewHolder")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView=getLayoutInflater().inflate(R.layout.custom_row_layout,null);
