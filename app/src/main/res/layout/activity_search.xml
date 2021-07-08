@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:ems="12"
         android:hint="Search Pincode"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +23,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="casual"
+        android:fontFamily="poppi"
         android:text="WELCOME TO COWIN CENTER APP"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -35,12 +35,13 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="140dp"
         android:onClick="searchButtonClick"
         android:text="SEARCH"
-        android:textColor="@color/_light_green"
+        android:background="@drawable/button"
+        android:textColor="@color/ghost_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,5 +70,6 @@
         app:layout_constraintEnd_toEndOf="@+id/date"
         app:layout_constraintHorizontal_bias="0.963"
         app:layout_constraintStart_toStartOf="@+id/date"
-        app:srcCompat="@drawable/outline_calendar_today_24" />
+        app:srcCompat="@drawable/outline_calendar_today_24"
+        tools:ignore="VectorDrawableCompat" />
 </androidx.constraintlayout.widget.ConstraintLayout>

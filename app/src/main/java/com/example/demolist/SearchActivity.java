@@ -69,9 +69,9 @@ public class SearchActivity extends AppCompatActivity {
             Toast.makeText(this, "ENTER DATE", Toast.LENGTH_SHORT).show();
         }
         else {
-            String player0=this.pin.getText().toString();
-            String player1=this.date.getText().toString();
-            sharedPreferences.edit().putString("pin", String.valueOf(pin)).putString("date", String.valueOf(date)).apply();
+            String pinShared=this.pin.getText().toString();
+            String dateShared=this.date.getText().toString();
+            sharedPreferences.edit().putString("pinShared", pinShared).putString("dateShared", dateShared).apply();
             Intent intent = new Intent(this, CustomListViewActivity.class);
             startActivity(intent);
         }

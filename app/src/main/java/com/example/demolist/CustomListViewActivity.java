@@ -1,14 +1,18 @@
 package com.example.demolist;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,9 +31,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class CustomListViewActivity extends AppCompatActivity {
-    ListView listView;
-    ArrayList<String> centerList,districtList;
-    ArrayList<Boolean>availableList;
+    RecyclerView recyclerView;
+    ArrayList<VaccineCenter>vcenter;
+    String pin, date;
+    SharedPreferences sharedPreferences;
+  //  ArrayList<String> centerList,districtList;
+   // ArrayList<Boolean>availableList;
   //  String title[]={"Name1","Name2","Name3","Name4","Name5","Name6"};
 //String description[]={"Cricketer","Singer","App Developer","Software developer","Game developer","Soldier"};
 //int imagelist[]={R.drawable.banana,R.drawable.grapes,R.drawable.lemon,R.drawable.strawberry,R.drawable.orange};
@@ -36,10 +44,13 @@ public class CustomListViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_list_view);
-        centerList = new ArrayList<String>();
-        districtList = new ArrayList<String>();
-        availableList=new ArrayList<Boolean>();
-        String urlString = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode="+"824231"+"&date="+"06-07-2021";
+        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);
+        pin=sharedPreferences.getString("pinShared","Pincode");
+        date=sharedPreferences.getString("dateShared","Date");
+          recyclerView=findViewById(R.id.listview);
+          recyclerView.setLayoutManager(new LinearLayoutManager(this));
+          vcenter=new ArrayList<VaccineCenter>();
+        String urlString = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode="+pin+"&date="+date;
         StringRequest request = new StringRequest(Request.Method.GET, urlString, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -69,12 +80,13 @@ public class CustomListViewActivity extends AppCompatActivity {
                                 isAvailable=true;
                             }
                         }
-                        centerList.add(name);
-                        districtList.add(district);
-                        availableList.add(isAvailable);
-                    } CustomAdapter arrayAdapter=new CustomAdapter();
-                    listView=findViewById(R.id.listview);
-                    listView.setAdapter(arrayAdapter);
+
+                        VaccineCenter vaccineCenter=new VaccineCenter(name,district,isAvailable);
+                        vcenter.add(vaccineCenter);
+                    }
+                    VaccineAdapter arrayAdapter=new VaccineAdapter();
+                    recyclerView =findViewById(R.id.listview);
+                    recyclerView.setAdapter(arrayAdapter);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -85,7 +97,7 @@ public class CustomListViewActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(CustomListViewActivity.this, "URL hit failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CustomListViewActivity.this, "INVALID PIN! TRY AGAIN", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -96,7 +108,7 @@ public class CustomListViewActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return centerList.size();
+            return vcenter.size();
         }
 
         @Override
@@ -114,17 +126,55 @@ public class CustomListViewActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView=getLayoutInflater().inflate(R.layout.custom_row_layout,null);
             TextView textTitle=convertView.findViewById(R.id.txtTitle);
-            textTitle.setText(centerList.get(position));
+            textTitle.setText(vcenter.get(position).getName());
             TextView textDescription=convertView.findViewById(R.id.txtDescription);
-            textDescription.setText(districtList.get(position));
+            textDescription.setText(vcenter.get(position).getDistrictName());
             ImageView imageView=convertView.findViewById(R.id.imageView);
-            if (availableList.get(position))
+            if (vcenter.get(position).getAvailable())
             {
                 imageView.setImageResource(R.drawable.vaccinetrue);
             }else
             { imageView.setImageResource(R.drawable.vaccine);
             }
             return convertView;
+        }
+    }
+   public class VaccineAdapter extends RecyclerView.Adapter< VaccineAdapter.VaccineRowHolder>
+    {
+        @NotNull
+        @NonNull
+        @Override
+        public VaccineAdapter.VaccineRowHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+            View itemView=getLayoutInflater().inflate(R.layout.custom_row_layout,null);
+            return new VaccineRowHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull @NotNull VaccineAdapter.VaccineRowHolder holder, int position) {
+            holder.textTitle.setText(vcenter.get(position).getName());
+            holder.textDescription.setText(vcenter.get(position).getDistrictName());
+            if (vcenter.get(position).getAvailable())
+            {
+                holder.imageView.setImageResource(R.drawable.vaccinetrue);
+            }else
+            { holder.imageView.setImageResource(R.drawable.vaccine);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return vcenter.size();
+        }
+        public class VaccineRowHolder extends RecyclerView.ViewHolder
+        {    TextView textTitle,textDescription;
+             ImageView imageView;
+
+            public VaccineRowHolder(@NonNull @NotNull View itemView) {
+                super(itemView);
+                textTitle=itemView.findViewById(R.id.txtTitle);
+                textDescription=itemView.findViewById(R.id.txtDescription);
+                imageView=itemView.findViewById(R.id.imageView);
+            }
         }
     }
 }
