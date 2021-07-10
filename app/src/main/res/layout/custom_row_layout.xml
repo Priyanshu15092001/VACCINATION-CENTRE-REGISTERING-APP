@@ -21,10 +21,10 @@
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="20sp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@id/imageView"
         app:layout_constraintTop_toTopOf="parent" />
 

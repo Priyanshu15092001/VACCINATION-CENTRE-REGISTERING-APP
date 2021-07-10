@@ -2,17 +2,24 @@ package com.example.demolist;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -21,10 +28,12 @@ public class SearchActivity extends AppCompatActivity {
    EditText pin,date;
    SharedPreferences sharedPreferences;
    DatePickerDialog.OnDateSetListener setListener;
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
         pin=findViewById(R.id.pin);
         date=findViewById(R.id.date);
         ImageButton cal=findViewById(R.id.calender);
@@ -55,7 +64,6 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);
-
 
     }
     public void searchButtonClick(View view)

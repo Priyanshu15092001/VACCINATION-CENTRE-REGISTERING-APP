@@ -5,13 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +38,8 @@ public class CustomListViewActivity extends AppCompatActivity {
     ArrayList<VaccineCenter>vcenter;
     String pin, date;
     SharedPreferences sharedPreferences;
+    AutoCompleteTextView searchInput;
+    VaccineAdapter vaccineAdapter;
   //  ArrayList<String> centerList,districtList;
    // ArrayList<Boolean>availableList;
   //  String title[]={"Name1","Name2","Name3","Name4","Name5","Name6"};
@@ -44,52 +49,89 @@ public class CustomListViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_list_view);
-        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);
+        vaccineAdapter=new VaccineAdapter(this);
+        vcenter=new ArrayList<VaccineCenter>();
+        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);//700103
         pin=sharedPreferences.getString("pinShared","Pincode");
         date=sharedPreferences.getString("dateShared","Date");
-          recyclerView=findViewById(R.id.listview);
-          recyclerView.setLayoutManager(new LinearLayoutManager(this));
-          vcenter=new ArrayList<VaccineCenter>();
-        String urlString = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode="+pin+"&date="+date;
+        searchInput=findViewById(R.id.search_bar);
+        searchInput.setThreshold(1);
+        searchInput.addTextChangedListener(new TextWatcher() {
+                                               @Override
+                                               public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                               }
+
+                                               @Override
+                                               public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                               }
+
+                                               @Override
+                                               public void afterTextChanged(Editable s) {
+                                                   String searchedTerm=s.toString();
+                                                   ArrayList<VaccineCenter>tempList=new ArrayList<VaccineCenter>() ;
+                                                   for (VaccineCenter vc:vcenter)
+                                                   {
+                                                       if (vc.getName().toLowerCase().contains(searchedTerm.toLowerCase())||vc.getVaccineType().toLowerCase().contains(searchedTerm.toLowerCase()))
+                                                       {
+                                                           tempList.add(vc);
+                                                       }
+                                                   }
+                                                       vaccineAdapter.updateList(tempList);
+                                               }
+                                           });
+                recyclerView = findViewById(R.id.listview);
+        recyclerView.setAdapter(vaccineAdapter);
+          recyclerView.setLayoutManager(new LinearLayoutManager(CustomListViewActivity.this));
+
+        String urlString = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode="+pin+"&date="+date;
         StringRequest request = new StringRequest(Request.Method.GET, urlString, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Toast.makeText(CustomListViewActivity.this, "URL hit successfully", Toast.LENGTH_SHORT).show();
                 try {
-                    String name, district;
+                    String name="", district="",vaccineType="";
                     JSONObject parentObj = new JSONObject(response);
-                    JSONArray centers = parentObj.getJSONArray("centers");
+                    JSONArray centers = parentObj.getJSONArray("sessions");
                     JSONObject jsonObject;
-                    JSONArray sessionArray;
+
                     boolean isAvailable=false;
-                    int available_capacity,min_age_limit;
+                    int available_capacity=0,min_age_limit=0,max_age_limit=0,dose1=0,dose2=0;
+
                     getSupportActionBar().setTitle("Centers Found:"+centers.length());
                     for (int i = 0; i < centers.length(); i++) {
+                        ArrayList<String>slotList=new ArrayList<String>();
+                        max_age_limit=0;
                         jsonObject = centers.getJSONObject(i);
+                         JSONArray slot=jsonObject.getJSONArray("slots");
+                         for (int j=0;j<slot.length();j++)
+                         {
+                             slotList.add(slot.getString(j));
+                         }
                         name = jsonObject.getString("name");
                         district = jsonObject.getString("district_name");
-                       isAvailable=false;
-                        sessionArray=jsonObject.getJSONArray("sessions");
-                        for (int j=0;j<sessionArray.length();j++)
+                        isAvailable = false;
+                        available_capacity = jsonObject.getInt("available_capacity");
+                        min_age_limit = jsonObject.getInt("min_age_limit");
+                        if (min_age_limit!=45)
+                          max_age_limit=jsonObject.getInt("max_age_limit");
+                        vaccineType = jsonObject.getString("vaccine");
+                        dose1=jsonObject.getInt("available_capacity_dose1");
+                        dose2=jsonObject.getInt("available_capacity_dose2");
+
+                        if (available_capacity > 0)
                         {
-                            available_capacity=(sessionArray.getJSONObject(j)).getInt("available_capacity");
-                            min_age_limit=(sessionArray.getJSONObject(j)).getInt("min_age_limit");
-                            if (available_capacity>0&&min_age_limit==45)
-                            {
-                                district+=", "+available_capacity+" available";
-                                isAvailable=true;
-                            }
+                            isAvailable = true;
                         }
 
-                        VaccineCenter vaccineCenter=new VaccineCenter(name,district,isAvailable);
+
+                        VaccineCenter vaccineCenter = new VaccineCenter(name, district, vaccineType, min_age_limit,max_age_limit, available_capacity,dose1,dose2, isAvailable,slotList);
                         vcenter.add(vaccineCenter);
                     }
-                    VaccineAdapter arrayAdapter=new VaccineAdapter();
-                    recyclerView =findViewById(R.id.listview);
-                    recyclerView.setAdapter(arrayAdapter);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    vaccineAdapter.updateList(vcenter);
+                    } catch (JSONException jsonException) {
+                    jsonException.printStackTrace();
                 }
 
             }
@@ -104,7 +146,7 @@ public class CustomListViewActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(CustomListViewActivity.this);
         requestQueue.add(request);
     }
-    private class CustomAdapter extends BaseAdapter {
+  /*  private class CustomAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -123,7 +165,7 @@ public class CustomListViewActivity extends AppCompatActivity {
 
         @SuppressLint("ViewHolder")
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+       public View getView(int position, View convertView, ViewGroup parent) {
             convertView=getLayoutInflater().inflate(R.layout.custom_row_layout,null);
             TextView textTitle=convertView.findViewById(R.id.txtTitle);
             textTitle.setText(vcenter.get(position).getName());
@@ -138,22 +180,75 @@ public class CustomListViewActivity extends AppCompatActivity {
             }
             return convertView;
         }
-    }
-   public class VaccineAdapter extends RecyclerView.Adapter< VaccineAdapter.VaccineRowHolder>
-    {
+    }*/
+  public class VaccineAdapter extends RecyclerView.Adapter<VaccineAdapter.ViewHolder>
+    { ArrayList<VaccineCenter>vcenterList=new ArrayList<VaccineCenter>();
+        Context context;
+        public class ViewHolder extends RecyclerView.ViewHolder
+        {    TextView textTitle,textDescription;
+            ImageView imageView;
+
+            public ViewHolder(@NonNull @NotNull View itemView) {
+                super(itemView);
+                textTitle=itemView.findViewById(R.id.txtTitle);
+                textDescription=itemView.findViewById(R.id.txtDescription);
+                imageView=itemView.findViewById(R.id.imageView);
+            }
+        }
+        public VaccineAdapter(Context context) {
+            this.context=context;
+        }
+        public void updateList(ArrayList<VaccineCenter>list)
+        {
+            vcenterList=list;
+            notifyDataSetChanged();
+        }
+
+
         @NotNull
         @NonNull
         @Override
-        public VaccineAdapter.VaccineRowHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-            View itemView=getLayoutInflater().inflate(R.layout.custom_row_layout,null);
-            return new VaccineRowHolder(itemView);
+        public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+            View itemView= LayoutInflater.from(context).inflate(R.layout.custom_row_layout,null);
+            return new ViewHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull @NotNull VaccineAdapter.VaccineRowHolder holder, int position) {
-            holder.textTitle.setText(vcenter.get(position).getName());
-            holder.textDescription.setText(vcenter.get(position).getDistrictName());
-            if (vcenter.get(position).getAvailable())
+        public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
+            String slotstr="";
+            String district=vcenterList.get(position).getDistrictName();
+            String vaccinetype=vcenterList.get(position).getVaccineType();
+            int minAge=vcenterList.get(position).getMin_age_limit();
+            int maxAge=vcenterList.get(position).getMax_age_limit();
+            int capacity=vcenterList.get(position).getAvailable_capacity();
+           int dose1=vcenterList.get(position).getDose1();
+            int dose2=vcenterList.get(position).getDose2();
+            for (String str:vcenterList.get(position).slot)
+                   slotstr=slotstr+str+"\n\t\t    ";
+            String details="";
+                if(maxAge==0) {
+                     details = "District:" + district + "\n"
+                            + "Vaccine:" + vaccinetype + "\n"
+                            + "Available:" + capacity + "\n"
+                            + "1st dose:" + dose1 + "\n"
+                            + "2nd dose:" + dose2 + "\n"
+                            + "Min Age:" + minAge + "\n"
+                             +"Slots" + slotstr;
+                }
+                else
+                {
+                    details = "District:" + district + "\n"
+                            + "Vaccine:" + vaccinetype + "\n"
+                            + "Available:" + capacity + "\n"
+                            + "1st dose:" + dose1 + "\n"
+                            + "2nd dose:" + dose2 + "\n"
+                            + "Min Age:" + minAge + "\n"
+                            + "Max Age:"+maxAge+"\n"
+                            + "Slots:" +slotstr;
+                }
+            holder.textTitle.setText(vcenterList.get(position).getName());
+            holder.textDescription.setText(details);
+            if (vcenterList.get(position).getAvailable())
             {
                 holder.imageView.setImageResource(R.drawable.vaccinetrue);
             }else
@@ -163,18 +258,8 @@ public class CustomListViewActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return vcenter.size();
+            return vcenterList.size();
         }
-        public class VaccineRowHolder extends RecyclerView.ViewHolder
-        {    TextView textTitle,textDescription;
-             ImageView imageView;
 
-            public VaccineRowHolder(@NonNull @NotNull View itemView) {
-                super(itemView);
-                textTitle=itemView.findViewById(R.id.txtTitle);
-                textDescription=itemView.findViewById(R.id.txtDescription);
-                imageView=itemView.findViewById(R.id.imageView);
-            }
-        }
     }
 }
