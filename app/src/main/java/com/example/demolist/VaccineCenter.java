@@ -9,7 +9,7 @@ public class VaccineCenter {
     ArrayList<String>slot;
 
 
-    public VaccineCenter(String name, String districtName,String vaccineType, int min_age_limit,int max_age_limit,int dose1,int dose2,int available_capacity,Boolean isAvailable,ArrayList<String>slot) {
+    public VaccineCenter(String name, String districtName,String vaccineType, int min_age_limit,int max_age_limit,int available_capacity,int dose1,int dose2,Boolean isAvailable,ArrayList<String>slot) {
         this.name = name;
         this.districtName = districtName;
         this.vaccineType=vaccineType;

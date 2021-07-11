@@ -101,6 +101,8 @@ public class CustomListViewActivity extends AppCompatActivity {
 
                     getSupportActionBar().setTitle("Centers Found:"+centers.length());
                     for (int i = 0; i < centers.length(); i++) {
+                        dose1=0;
+                        dose2=0;
                         ArrayList<String>slotList=new ArrayList<String>();
                         max_age_limit=0;
                         jsonObject = centers.getJSONObject(i);

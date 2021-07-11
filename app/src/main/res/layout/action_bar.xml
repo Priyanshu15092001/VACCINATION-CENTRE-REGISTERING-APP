@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/actionbarTitle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="10dp"
+        android:text="Cowin-Center"
+        android:textSize="23sp"
+        android:gravity="center_vertical"
+        android:fontFamily="@font/poppins_semibold"
+        android:textColor="@color/white_smoke"
+        android:background="#27285c"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+
+</LinearLayout>
