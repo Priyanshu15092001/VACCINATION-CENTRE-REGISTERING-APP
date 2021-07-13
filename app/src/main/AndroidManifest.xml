@@ -11,6 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DemoList">
+        <activity android:name=".DistrictSearchActivity">
+
+        </activity>
+        <activity android:name=".DistrictListActivity" />
         <activity android:name=".SearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,9 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CustomListViewActivity">
-
-        </activity>
+        <activity android:name=".CustomListViewActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

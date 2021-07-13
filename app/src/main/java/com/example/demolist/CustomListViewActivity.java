@@ -141,7 +141,7 @@ public class CustomListViewActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(CustomListViewActivity.this, "INVALID PIN! TRY AGAIN", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CustomListViewActivity.this, "INVALID PIN! TRY AGAIN", Toast.LENGTH_LONG).show();
                     }
                 }
         );

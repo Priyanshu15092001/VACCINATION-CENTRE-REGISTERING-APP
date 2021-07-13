@@ -85,4 +85,8 @@ public class SearchActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+    public void districtButtonClick(View view)
+    {Intent intent=new Intent(this,DistrictSearchActivity.class);
+    startActivity(intent);
+    }
 }
