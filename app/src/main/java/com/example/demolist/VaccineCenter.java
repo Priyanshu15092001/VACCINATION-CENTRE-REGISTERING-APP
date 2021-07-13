@@ -3,13 +3,13 @@ package com.example.demolist;
 import java.util.ArrayList;
 
 public class VaccineCenter {
-    String name,districtName,vaccineType;
+    String name,districtName,vaccineType,fee_type,address;
     Boolean isAvailable;
     int min_age_limit,max_age_limit,available_capacity,dose1,dose2;
     ArrayList<String>slot;
 
 
-    public VaccineCenter(String name, String districtName,String vaccineType, int min_age_limit,int max_age_limit,int available_capacity,int dose1,int dose2,Boolean isAvailable,ArrayList<String>slot) {
+    public VaccineCenter(String name, String districtName,String address,String vaccineType,String fee_type, int min_age_limit,int max_age_limit,int available_capacity,int dose1,int dose2,Boolean isAvailable,ArrayList<String>slot) {
         this.name = name;
         this.districtName = districtName;
         this.vaccineType=vaccineType;
@@ -21,9 +21,26 @@ public class VaccineCenter {
         this.dose2=dose2;
         this.slot=new ArrayList<String>();
         this.slot=slot;
+        this.address=address;
+        this.fee_type=fee_type;
     }
 
 
+    public String getFee_type() {
+        return fee_type;
+    }
+
+    public void setFee_type(String fee_type) {
+        this.fee_type = fee_type;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getVaccineType() {
         return vaccineType;

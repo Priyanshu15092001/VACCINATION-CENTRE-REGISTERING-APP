@@ -87,13 +87,13 @@ public class DistrictListActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 Toast.makeText(DistrictListActivity.this, "URL hit successfully", Toast.LENGTH_SHORT).show();
                 try {
-                    String name = "", address = "", vaccineType = "";
+                    String name = "", address = "", vaccineType = "",fee_type;
                     JSONObject parentObj = new JSONObject(response);
                     JSONArray centers = parentObj.getJSONArray("sessions");
                     JSONObject jsonObject;
                     boolean isAvailable = false;
                     int available_capacity = 0, min_age_limit = 0, dose1 = 0, dose2 = 0;
-                    Boolean allow_all_age=false;
+                    Boolean allow_all_age=false;long pincode;
                     getSupportActionBar().setTitle("Centers Found:" + centers.length());
                     for (int i = 0; i < centers.length(); i++) {
                         dose1 = 0;
@@ -113,13 +113,14 @@ public class DistrictListActivity extends AppCompatActivity {
                         vaccineType = jsonObject.getString("vaccine");
                         dose1 = jsonObject.getInt("available_capacity_dose1");
                         dose2 = jsonObject.getInt("available_capacity_dose2");
-
+                        fee_type=jsonObject.getString("fee_type");
+                        pincode=jsonObject.getLong("pincode");
                         if (available_capacity > 0) {
                             isAvailable = true;
                         }
 
 
-                        DistrictVaccineCenter vaccineCenter = new DistrictVaccineCenter(name, address, vaccineType, min_age_limit, allow_all_age, available_capacity, dose1, dose2, isAvailable, slotList);
+                        DistrictVaccineCenter vaccineCenter = new DistrictVaccineCenter(name, address,pincode, vaccineType,fee_type, min_age_limit, allow_all_age, available_capacity, dose1, dose2, isAvailable, slotList);
                         vcenter.add(vaccineCenter);
                     }
                     districtVaccineAdapter.updateList(vcenter);
@@ -169,12 +170,16 @@ public class DistrictListActivity extends AppCompatActivity {
             int capacity=vcenterList.get(position).getAvailable_capacity();
             int dose1=vcenterList.get(position).getDose1();
             int dose2=vcenterList.get(position).getDose2();
+            long pincode=vcenterList.get(position).getPincode();
+            String feetype=vcenterList.get(position).getFee_type();
             for (String str:vcenterList.get(position).slot)
                 slotstr=slotstr+str+"\n\t\t    ";
             String details="";
 
                 details = "Address:" + address + "\n"
+                        + "Pincode:" + pincode + "\n"
                         + "Vaccine:" + vaccinetype + "\n"
+                        + "Fee Type:" + feetype + "\n"
                         + "Available:" + capacity + "\n"
                         + "1st dose:" + dose1 + "\n"
                         + "2nd dose:" + dose2 + "\n"

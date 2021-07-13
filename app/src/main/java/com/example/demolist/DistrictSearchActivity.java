@@ -2,6 +2,7 @@ package com.example.demolist;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -45,10 +46,13 @@ EditText date;
     int IDstate = 0,IDdistrict=0;
 String stateTxt,districtTxt;
 SharedPreferences sharedPreferences;
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_district_search);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.action_bar2);
         date=findViewById(R.id.date);
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);
         ImageButton cal=findViewById(R.id.calender);

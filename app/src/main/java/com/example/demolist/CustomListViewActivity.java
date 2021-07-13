@@ -91,7 +91,7 @@ public class CustomListViewActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 Toast.makeText(CustomListViewActivity.this, "URL hit successfully", Toast.LENGTH_SHORT).show();
                 try {
-                    String name="", district="",vaccineType="";
+                    String name="", district="",vaccineType="",address="",fee_type="";
                     JSONObject parentObj = new JSONObject(response);
                     JSONArray centers = parentObj.getJSONArray("sessions");
                     JSONObject jsonObject;
@@ -113,6 +113,8 @@ public class CustomListViewActivity extends AppCompatActivity {
                          }
                         name = jsonObject.getString("name");
                         district = jsonObject.getString("district_name");
+                        address=jsonObject.getString("address");
+                        fee_type=jsonObject.getString("fee_type");
                         isAvailable = false;
                         available_capacity = jsonObject.getInt("available_capacity");
                         min_age_limit = jsonObject.getInt("min_age_limit");
@@ -128,7 +130,7 @@ public class CustomListViewActivity extends AppCompatActivity {
                         }
 
 
-                        VaccineCenter vaccineCenter = new VaccineCenter(name, district, vaccineType, min_age_limit,max_age_limit, available_capacity,dose1,dose2, isAvailable,slotList);
+                        VaccineCenter vaccineCenter = new VaccineCenter(name, district,address, vaccineType,fee_type, min_age_limit,max_age_limit, available_capacity,dose1,dose2, isAvailable,slotList);
                         vcenter.add(vaccineCenter);
                     }
                     vaccineAdapter.updateList(vcenter);
@@ -220,6 +222,8 @@ public class CustomListViewActivity extends AppCompatActivity {
             String slotstr="";
             String district=vcenterList.get(position).getDistrictName();
             String vaccinetype=vcenterList.get(position).getVaccineType();
+            String address=vcenterList.get(position).getAddress();
+            String feetype=vcenterList.get(position).getFee_type();
             int minAge=vcenterList.get(position).getMin_age_limit();
             int maxAge=vcenterList.get(position).getMax_age_limit();
             int capacity=vcenterList.get(position).getAvailable_capacity();
@@ -230,7 +234,9 @@ public class CustomListViewActivity extends AppCompatActivity {
             String details="";
                 if(maxAge==0) {
                      details = "District:" + district + "\n"
+                             + "Address:" + address + "\n"
                             + "Vaccine:" + vaccinetype + "\n"
+                             + "Fee Type:" + feetype + "\n"
                             + "Available:" + capacity + "\n"
                             + "1st dose:" + dose1 + "\n"
                             + "2nd dose:" + dose2 + "\n"
@@ -240,7 +246,9 @@ public class CustomListViewActivity extends AppCompatActivity {
                 else
                 {
                     details = "District:" + district + "\n"
+                            + "Address:" + address + "\n"
                             + "Vaccine:" + vaccinetype + "\n"
+                            + "Fee Type:" + feetype + "\n"
                             + "Available:" + capacity + "\n"
                             + "1st dose:" + dose1 + "\n"
                             + "2nd dose:" + dose2 + "\n"
