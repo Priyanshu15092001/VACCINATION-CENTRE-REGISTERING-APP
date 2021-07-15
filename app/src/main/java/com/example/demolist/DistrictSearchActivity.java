@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -42,7 +43,7 @@ Spinner state,district;
 
 ArrayList<String>stateName,districtName;
 HashMap<String,Integer> stateID,districtID;
-EditText date;
+TextView date;
     int IDstate = 0,IDdistrict=0;
 String stateTxt,districtTxt;
 SharedPreferences sharedPreferences;
@@ -80,6 +81,26 @@ SharedPreferences sharedPreferences;
                 },year,month,day);
                 datePickerDialog.show();
 
+            }
+        });
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog=new DatePickerDialog(DistrictSearchActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        String dateFormat = "";
+                        month=month+1;
+                        String dayStr=""+day,monthStr=""+month;
+                        if (day<10)
+                            dayStr="0"+dayStr;
+                        if (month<10)
+                            monthStr="0"+monthStr;
+                        dateFormat = dayStr + "-" +monthStr+ "-" + year;
+                        date.setText(dateFormat);
+                    }
+                },year,month,day);
+                datePickerDialog.show();
             }
         });
         state = findViewById(R.id.spinnerstate);
@@ -128,7 +149,8 @@ SharedPreferences sharedPreferences;
         requestQueue.add(requeststate);
 
 
-        ArrayAdapter<String>stateAdapter=new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, stateName);
+        ArrayAdapter<String>stateAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_layout, stateName);
+        stateAdapter.setDropDownViewResource(R.layout.dropdown_layout);
         state.setAdapter(stateAdapter);
         state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -180,7 +202,8 @@ SharedPreferences sharedPreferences;
 
 
 
-        ArrayAdapter<String>districtAdapter=new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item, districtName);
+        ArrayAdapter<String>districtAdapter=new ArrayAdapter<String>(this,R.layout.spinner_layout, districtName);
+        districtAdapter.setDropDownViewResource(R.layout.dropdown_layout);
         district.setAdapter(districtAdapter);
         district.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

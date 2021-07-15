@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DistrictSearchActivity">
+    tools:context=".DistrictSearchActivity"
+    android:background="@color/ghost_white">
 
 
     <TextView
@@ -16,6 +17,7 @@
         android:gravity="center_horizontal"
         android:hint="Search any vaccination center by your district. No registration needed."
         android:padding="10dp"
+        android:textColorHint="@color/gray"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,57 +27,66 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.095" />
 
-    <LinearLayout
-        android:id="@+id/linear"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt"
-        app:layout_constraintVertical_bias="0.033"
-        tools:layout_editor_absoluteX="-5dp">
 
-
-        <Spinner
-            android:id="@+id/spinnerstate"
-            android:layout_width="265dp"
-            android:layout_height="47dp"
-            android:layout_marginTop="20dp" />
-
-        <Spinner
-            android:id="@+id/spinnerdistrict"
-            android:layout_width="265dp"
-            android:layout_height="47dp"
-            android:layout_marginTop="25dp" />
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/date"
-        android:layout_width="270dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="128dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginRight="52dp"
-        android:ems="12"
-        android:hint="Search Date(dd-mm-yyyy)"
-        android:inputType="date"
+    <Spinner
+        android:id="@+id/spinnerstate"
+        android:layout_width="265dp"
+        android:layout_height="47dp"
+        android:background="#dcdcdc"
+        android:padding="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linear"
-        app:layout_constraintVertical_bias="0.085" />
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt"
+        app:layout_constraintVertical_bias="0.052" />
+
+    <Spinner
+        android:id="@+id/spinnerdistrict"
+        android:layout_width="265dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="50dp"
+android:padding="6dp"
+        android:background="#dcdcdc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerstate"
+        app:layout_constraintVertical_bias="0.01" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="265dp"
+        android:layout_height="47dp"
+         android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:padding="6dp"
+        android:layout_marginTop="50dp"
+        android:background="#dcdcdc"
+        android:ems="11"
+        android:hint="Search Date(dd-mm-yyyy)"
+        android:inputType="date"
+        android:textColor="@color/black"
+        android:textColorHint="@color/gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerdistrict"
+        app:layout_constraintVertical_bias="0.004" />
 
     <ImageButton
         android:id="@+id/calender"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/date"
         app:layout_constraintEnd_toEndOf="@+id/date"
-        app:layout_constraintHorizontal_bias="0.963"
+        app:layout_constraintHorizontal_bias="0.966"
+        android:background="#dcdcdc"
         app:layout_constraintStart_toStartOf="@+id/date"
-        app:srcCompat="@drawable/outline_calendar_today_24"
+        app:srcCompat="@drawable/ic_baseline_calendar_today_241"
         tools:ignore="VectorDrawableCompat" />
 
     <Button
@@ -89,8 +100,10 @@
         android:textColor="@color/ghost_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date" />
+        app:layout_constraintTop_toBottomOf="@+id/date"
+        app:layout_constraintVertical_bias="0.576" />
 
     <Button
         android:id="@+id/pinbutton"

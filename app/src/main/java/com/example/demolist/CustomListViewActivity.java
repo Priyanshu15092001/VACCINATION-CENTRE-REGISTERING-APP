@@ -118,8 +118,10 @@ public class CustomListViewActivity extends AppCompatActivity {
                         isAvailable = false;
                         available_capacity = jsonObject.getInt("available_capacity");
                         min_age_limit = jsonObject.getInt("min_age_limit");
-                        if (min_age_limit!=45)
+                        if (jsonObject.has("max_age_limit"))
                           max_age_limit=jsonObject.getInt("max_age_limit");
+                        else
+                            max_age_limit=0;
                         vaccineType = jsonObject.getString("vaccine");
                         dose1=jsonObject.getInt("available_capacity_dose1");
                         dose2=jsonObject.getInt("available_capacity_dose2");
@@ -241,7 +243,7 @@ public class CustomListViewActivity extends AppCompatActivity {
                             + "1st dose:" + dose1 + "\n"
                             + "2nd dose:" + dose2 + "\n"
                             + "Min Age:" + minAge + "\n"
-                             +"Slots" + slotstr;
+                             +"Slots:" + slotstr;
                 }
                 else
                 {

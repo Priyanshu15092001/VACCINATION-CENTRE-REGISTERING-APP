@@ -92,7 +92,7 @@ public class DistrictListActivity extends AppCompatActivity {
                     JSONArray centers = parentObj.getJSONArray("sessions");
                     JSONObject jsonObject;
                     boolean isAvailable = false;
-                    int available_capacity = 0, min_age_limit = 0, dose1 = 0, dose2 = 0;
+                    int available_capacity = 0, min_age_limit = 0,max_age_limit=0, dose1 = 0, dose2 = 0;
                     Boolean allow_all_age=false;long pincode;
                     getSupportActionBar().setTitle("Centers Found:" + centers.length());
                     for (int i = 0; i < centers.length(); i++) {
@@ -109,7 +109,12 @@ public class DistrictListActivity extends AppCompatActivity {
                         isAvailable = false;
                         available_capacity = jsonObject.getInt("available_capacity");
                         min_age_limit = jsonObject.getInt("min_age_limit");
+                        if (jsonObject.has("allow_all_age"))
                             allow_all_age = jsonObject.getBoolean("allow_all_age");
+                        else
+                        { allow_all_age=false;
+                        if (jsonObject.has("max_age_limit"))
+                               max_age_limit=jsonObject.getInt("max_age_limit");}
                         vaccineType = jsonObject.getString("vaccine");
                         dose1 = jsonObject.getInt("available_capacity_dose1");
                         dose2 = jsonObject.getInt("available_capacity_dose2");
@@ -120,7 +125,7 @@ public class DistrictListActivity extends AppCompatActivity {
                         }
 
 
-                        DistrictVaccineCenter vaccineCenter = new DistrictVaccineCenter(name, address,pincode, vaccineType,fee_type, min_age_limit, allow_all_age, available_capacity, dose1, dose2, isAvailable, slotList);
+                        DistrictVaccineCenter vaccineCenter = new DistrictVaccineCenter(name, address,pincode, vaccineType,fee_type, min_age_limit,max_age_limit, allow_all_age, available_capacity, dose1, dose2, isAvailable, slotList);
                         vcenter.add(vaccineCenter);
                     }
                     districtVaccineAdapter.updateList(vcenter);
@@ -166,6 +171,7 @@ public class DistrictListActivity extends AppCompatActivity {
             String address=vcenterList.get(position).getAddress();
             String vaccinetype=vcenterList.get(position).getVaccineType();
             int minAge=vcenterList.get(position).getMin_age_limit();
+            int maxAge=vcenterList.get(position).getMax_age_limit();
             Boolean allow_all_age=vcenterList.get(position).getAllow_all_age();
             int capacity=vcenterList.get(position).getAvailable_capacity();
             int dose1=vcenterList.get(position).getDose1();
@@ -175,8 +181,8 @@ public class DistrictListActivity extends AppCompatActivity {
             for (String str:vcenterList.get(position).slot)
                 slotstr=slotstr+str+"\n\t\t    ";
             String details="";
-
-                details = "Address:" + address + "\n"
+                    if (maxAge>0)
+                    {  details = "Address:" + address + "\n"
                         + "Pincode:" + pincode + "\n"
                         + "Vaccine:" + vaccinetype + "\n"
                         + "Fee Type:" + feetype + "\n"
@@ -184,10 +190,21 @@ public class DistrictListActivity extends AppCompatActivity {
                         + "1st dose:" + dose1 + "\n"
                         + "2nd dose:" + dose2 + "\n"
                         + "Min Age:" + minAge + "\n"
+                        + "Max Age:" + maxAge + "\n"
                         + "Allow all age:"+ allow_all_age + "\n"
-                        +"Slots" + slotstr;
-
-
+                        +"Slots" + slotstr;}
+                        else {
+                        details = "Address:" + address + "\n"
+                                + "Pincode:" + pincode + "\n"
+                                + "Vaccine:" + vaccinetype + "\n"
+                                + "Fee Type:" + feetype + "\n"
+                                + "Available:" + capacity + "\n"
+                                + "1st dose:" + dose1 + "\n"
+                                + "2nd dose:" + dose2 + "\n"
+                                + "Min Age:" + minAge + "\n"
+                                + "Allow all age:" + allow_all_age + "\n"
+                                + "Slots" + slotstr;
+                    }
             holder.textTitle.setText(vcenterList.get(position).getName());
             holder.textDescription.setText(details);
             if (vcenterList.get(position).getAvailable())

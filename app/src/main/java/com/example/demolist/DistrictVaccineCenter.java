@@ -7,12 +7,12 @@ public class DistrictVaccineCenter {
     String name,address,vaccineType,fee_type;
     long pincode;
     Boolean isAvailable;
-    int min_age_limit,available_capacity,dose1,dose2;
+    int min_age_limit,max_age_limit,available_capacity,dose1,dose2;
     ArrayList<String> slot;
     Boolean allow_all_age;
 
 
-    public DistrictVaccineCenter(String name, String address,long pincode,String vaccineType,String fee_type, int min_age_limit,Boolean allow_all_age,int available_capacity,int dose1,int dose2,Boolean isAvailable,ArrayList<String>slot) {
+    public DistrictVaccineCenter(String name, String address,long pincode,String vaccineType,String fee_type, int min_age_limit,int max_age_limit,Boolean allow_all_age,int available_capacity,int dose1,int dose2,Boolean isAvailable,ArrayList<String>slot) {
         this.name = name;
         this.address = address;
         this.vaccineType=vaccineType;
@@ -26,6 +26,15 @@ public class DistrictVaccineCenter {
         this.slot=slot;
         this.pincode=pincode;
         this.fee_type=fee_type;
+        this.max_age_limit=max_age_limit;
+    }
+
+    public int getMax_age_limit() {
+        return max_age_limit;
+    }
+
+    public void setMax_age_limit(int max_age_limit) {
+        this.max_age_limit = max_age_limit;
     }
 
     public String getFee_type() {

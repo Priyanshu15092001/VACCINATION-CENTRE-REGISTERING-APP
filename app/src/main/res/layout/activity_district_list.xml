@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DistrictListActivity">
+    tools:context=".DistrictListActivity"
+    android:background="@color/ghost_white">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/districtlistview"
         android:layout_width="match_parent"
@@ -17,9 +18,13 @@
     <AutoCompleteTextView
         android:id="@+id/search_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_margin="10dp"
         android:ems="10"
+        android:textColorHint="@color/gray"
+        android:textColor="@color/gray"
+        android:background="#dcdcdc"
+android:padding="10dp"
         android:hint="Search"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -25,7 +25,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 public class SearchActivity extends AppCompatActivity {
-   EditText pin,date;
+   EditText pin;TextView date;
    SharedPreferences sharedPreferences;
    DatePickerDialog.OnDateSetListener setListener;
     @SuppressLint("WrongConstant")
@@ -62,6 +62,27 @@ public class SearchActivity extends AppCompatActivity {
                 },year,month,day);
                 datePickerDialog.show();
 
+            }
+        });
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog=new DatePickerDialog(
+                        SearchActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        String dateFormat = "";
+                        month=month+1;
+                        String dayStr=""+day,monthStr=""+month;
+                        if (day<10)
+                            dayStr="0"+dayStr;
+                        if (month<10)
+                            monthStr="0"+monthStr;
+                        dateFormat = dayStr + "-" +monthStr+ "-" + year;
+                        date.setText(dateFormat);
+                    }
+                },year,month,day);
+                datePickerDialog.show();
             }
         });
         sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);
